@@ -1,3 +1,5 @@
+pipeline {
+    agent any{
 stage('Build & Push') {
     steps {
         script {
@@ -14,4 +16,6 @@ stage('Build & Push') {
             }
         }
     }
+}
+}
 }
