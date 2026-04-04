@@ -5,8 +5,8 @@ pipeline {
                 steps {
                     script {
                         //if (env.BRANCH_NAME == 'dev') {
-                        echo $env
-                        echo $BRANCH_NAME
+                        sh "echo $env"
+                        sh "echo $BRANCH_NAME"
                         sh "./build.sh koventhan/ecommercedev latest"
                        // docker.withRegistry('', 'dockerregistry') {
                         sh "docker push koventhan/ecommercedev:latest"
