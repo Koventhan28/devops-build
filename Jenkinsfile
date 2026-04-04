@@ -1,20 +1,17 @@
-pipeline {
-    agent any 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                git url: 'https://github.com/Koventhan28/devops-build.git', branch: 'master'
+stage('Build & Push') {
+    steps {
+        script {
+            if (env.BRANCH_NAME == 'dev') {
+                sh "./build.sh koventhan/ecommercedev latest"
+                docker.withRegistry('', 'dockerregistry') {
+                    sh "docker push koventhan/ecommercedev:latest"
+                }
+            } else if (env.BRANCH_NAME == 'master') {
+                sh "./build.sh koventhan/ecommerceprod latest"
+                docker.withRegistry('', 'dockerregistry') {
+                    sh "docker push koventhan/ecommerceprod:latest"
+                }
             }
         }
-           stage('Building docker images'){
-               steps {
-                sh "bash -x build.sh"       
-           } 
-           } 
-           stage('Pushing docker images'){
-                steps {
-                sh "bash -x deploy.sh"       
-           } 
-           } 
     }
 }
