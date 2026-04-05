@@ -36,7 +36,7 @@ pipeline {
                     sh """
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin ${DOCKERHUB_REGISTRY}
                     docker tag koventhan/ecommercedev:latest koventhan/ecommerceprod:latest
-                    docker push koventhan/ecommerceprod:latest
+                    docker push koventhan/ecommerceprod:latest 
                     """
             }
         }
