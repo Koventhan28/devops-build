@@ -7,9 +7,12 @@ pipeline {
             }
         }
         stage('Push to DockerHub') {
-                when {
-                         branch 'dev'
-            }
+               when {
+        // This covers both Multibranch (BRANCH_NAME) and standard Git (GIT_BRANCH)
+        expression { 
+            return env.BRANCH_NAME == 'dev' || env.GIT_BRANCH == 'origin/dev' || env.GIT_BRANCH == 'dev' 
+        }
+    }
             steps {
                 
                 withCredentials([usernamePassword(credentialsId: 'dockerregistry',
@@ -25,9 +28,11 @@ pipeline {
         }
         }
         stage('Push to Prod') {
-           when {
-                branch 'master'
-            }
+          when {
+        expression { 
+            return env.BRANCH_NAME == 'master' || env.GIT_BRANCH == 'origin/master' || env.GIT_BRANCH == 'master' 
+        }
+    }
             steps {
                  
                 withCredentials([usernamePassword(credentialsId: 'dockerregistry',
