@@ -7,10 +7,11 @@ pipeline {
             }
         }
         stage('Push to DockerHub') {
-            when {
-                branch 'dev'
-            }
+
             steps {
+                when {
+                         branch 'dev'
+                    }
                 withCredentials([usernamePassword(credentialsId: 'dockerregistry',
                                     usernameVariable: 'DOCKER_USER',
                                     passwordVariable: 'DOCKER_PASS')]) {
@@ -23,10 +24,11 @@ pipeline {
             }
         }
         stage('Push to Prod') {
-            when {
+           
+            steps {
+                 when {
                 branch 'master'
             }
-            steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerregistry',
                                     usernameVariable: 'DOCKER_USER',
                                     passwordVariable: 'DOCKER_PASS')]) {
