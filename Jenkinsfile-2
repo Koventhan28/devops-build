@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh './build.sh'
+            }
+        }
+        stage('Push to DockerHub') {
+            when {
+                branch 'dev'
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerregistry',
+                                    usernameVariable: 'DOCKER_USER',
+                                    passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                    set -e
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin ${DOCKERHUB_REGISTRY}
+                    docker tag koventhan/ecommerce:latest koventhan/ecommercedev:latest
+                    docker push koventhan/ecommercedev:latest
+                    """
+            }
+        }
+        stage('Push to Prod') {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerregistry',
+                                    usernameVariable: 'DOCKER_USER',
+                                    passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin ${DOCKERHUB_REGISTRY}
+                    docker tag koventhan/ecommercedev:latest koventhan/ecommerceprod:latest
+                    docker push koventhan/ecommerceprod:latest
+                    """
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh './deploy.sh'
+            }
+        }
+    }
+}
