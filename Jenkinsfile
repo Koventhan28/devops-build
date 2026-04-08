@@ -6,16 +6,47 @@ pipeline {
                 sh './build.sh'
             }
         }
-        stage('Push') {
+        stage('Push to DockerHub') {
+               when {
+        // This covers both Multibranch (BRANCH_NAME) and standard Git (GIT_BRANCH)
+        expression { 
+            return env.BRANCH_NAME == 'dev' || env.GIT_BRANCH == 'origin/dev' || env.GIT_BRANCH == 'dev' 
+        }
+    }
             steps {
-                script {
-                    if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker push koventhan/ecommercedev:latest'
-                    } else if (env.BRANCH_NAME == 'master') {
-                        sh 'docker push koventhan/ecommerceprod:latest'
-                    }
-                }
+                
+                withCredentials([usernamePassword(credentialsId: 'dockerregistry',
+                                    usernameVariable: 'DOCKER_USER',
+                                    passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    set -e
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin ${DOCKERHUB_REGISTRY}
+                    docker images 
+                    docker tag koventhan/ecommerce:latest koventhan/ecommercedev:latest
+                    docker images 
+                    docker push koventhan/ecommercedev:latest
+                    '''
             }
+        }
+        }
+        stage('Push to Prod') {
+          when {
+        expression { 
+            return env.BRANCH_NAME == 'master' || env.GIT_BRANCH == 'origin/master' || env.GIT_BRANCH == 'master' 
+        }
+    }
+            steps {
+                 
+                withCredentials([usernamePassword(credentialsId: 'dockerregistry',
+                                    usernameVariable: 'DOCKER_USER',
+                                    passwordVariable: 'DOCKER_PASS')]) { 
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin ${DOCKERHUB_REGISTRY}
+                    docker tag koventhan/ecommercedev:latest koventhan/ecommerceprod:latest
+                    docker push koventhan/ecommerceprod:latest 
+                    '''
+            }
+        }
         }
         stage('Deploy') {
             steps {
@@ -24,3 +55,4 @@ pipeline {
         }
     }
 }
+    
