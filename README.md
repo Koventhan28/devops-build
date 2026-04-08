@@ -1,6 +1,6 @@
 # This is the  Repository link for downloading the repo: https://github.com/Koventhan28/devops-build.git
-# Once you clone the Repository move to the directory and use the below commands commands 
-# Note: The application files are already built so no need to again build using npm commands.
+Once you clone the Repository move to the directory and use the below commands commands 
+Note: The application files are already built so no need to again build using npm commands.
 If you want to locally build the docker images you can use the just use the below command 
 ```
 docker build -t koventhan/ecommerce .
