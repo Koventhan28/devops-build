@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'sudo ./build.sh'
+                sh './build.sh'
             }
         }
         stage('Push to DockerHub') {
