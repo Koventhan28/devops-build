@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo docker build -t koventhan/ecommerce .
+docker build -t koventhan/ecommerce .
