@@ -69,3 +69,13 @@ Add the jenkins website link with /github-webhook/ at the end and once its added
 ```
 Once git push happens the pipeline automatically starts and Pipeline runs for building,Pushing and the Deploying the application to EC2.
 You can access the site using the Appropriate EC2 IP Address and port
+
+### Monitoring 
+For monitoring download the uptime kuma opensource monitoring tool from site 
+```
+https://raw.githubusercontent.com/louislam/uptime-kuma/master/compose.yaml
+```
+run the below command so make sure the compose.yaml file is present.
+```
+docker-compose up -d
+```
