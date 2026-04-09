@@ -75,7 +75,7 @@ For monitoring download the uptime kuma opensource monitoring tool from site
 ```
 https://raw.githubusercontent.com/louislam/uptime-kuma/master/compose.yaml
 ```
-run the below command so make sure the compose.yaml file is present.
+run the below command and make sure the compose.yaml file is present on the directory.
 ```
 docker-compose up -d
 ```
